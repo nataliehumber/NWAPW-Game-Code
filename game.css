@@ -1,0 +1,55 @@
+body {
+    padding: 20px;
+    min-width: 100%;
+    min-height: 100%;
+}
+
+html, body{
+}
+
+.p20 {
+    padding: 20px;
+}
+
+.canvasbox {
+    border-radius: 3px;
+    margin-right: 0px;
+    width: 240px;
+    height: 180px;
+    border-bottom: 0px solid #0063FF;
+    box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0), 0 4px 10px 0 #00000030;
+  background: #333;
+
+}
+
+#movecanvas{
+  z-index: -1;
+  position: fixed;
+  left: 300px;
+  top: 80px;
+  background: #ffffff;
+  border-radius: 3px;
+  width: 1120px;
+  height: 690px;
+}
+
+canvas {
+  position: fixed;
+  left: 20px;
+  bottom:20px;
+}
+video {
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+  z-index: -1;
+}
+
+.mb10 {
+    margin-bottom: 0px
+
+}
+
+.mt10 {
+    margin-top: 0px
+}
