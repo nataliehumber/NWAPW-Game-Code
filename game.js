@@ -23,20 +23,6 @@ var gamey;
 var x;
 var y;
 
-/*var totalBalls = 10;
-var balls=[];
-for(var i=0;i<totalBalls;i++){
-    balls.push({
-      "x" : 0,
-      "y" : 0
-    });
-}*/
-
-//let elem = document.getElementById("mybutton");
-//var elemRect = elem.getBoundingClientRect();
-
-//var itemRect = item.getBoundingClientRect();
-
 const modelParams = {
     flipHorizontal: true,   // flip e.g for video
     maxNumBoxes: 1,        // maximum number of boxes to detect
@@ -82,9 +68,6 @@ function runDetection() {
       gamey = moveCanvas.height * (midvalY / video.height)
       console.log(midvalY);
       console.log('Predictions: ', gamey);
-      //draw();
-      //draw2();
-      //scrolling();
       animate();
 
       }
@@ -137,22 +120,6 @@ function startScrollUp() {
   }
 }*/
 
-
-/*function drawBall2(ballobj) {
-  ballobj.x = Math.random()*(moveCanvas.width);
-  ballobj.y = 300;
-  ctx.beginPath();
-  ctx.arc(ballobj.x, ballobj.y, 10, 0, Math.PI*2);
-  ctx.fillStyle = "rgba(243,201,201,1)";
-  ctx.fill();
-}
-function draw2() {
-  for(var i=0;i<totalBalls;i++){
-    drawBall2(balls[i]);
-    resetBall(balls[i]);
-  }
-}*/
-
 var startingScore = 50;
 var continueAnimating = false;
 var score;
@@ -186,7 +153,10 @@ function animate() {
 
     if (continueAnimating) {
         requestAnimationFrame(animate);
+        for (var i = 0; i < balls.length; i++) {
+            resetBall(balls[i]);
     }
+  }
 
     // for each rock
     // (1) check for collisions
@@ -209,15 +179,11 @@ function animate() {
         ball.y += ball.speed;
 
         // if the rock is below the canvas,
-        /*if (ball.y > moveCanvas.height) {
-            resetBall(ball);*/
+        if (ball.y > moveCanvas.height) {
+            resetBall(ball);
         }
     // redraw everything
     drawAll();
-
-    /*for (var i = 0; i < balls.length; i++) {
-        resetBall(balls[i]);
-    }*/
 
 }
 
@@ -230,20 +196,21 @@ function drawAll() {
     let y = gamey;
     ctx.beginPath();
     ctx.rect(x, 750, 150, 40);
-    ctx.fillStyle = "rgba(243,201,201,1)";
+    ctx.fillStyle = "rgba(255,0,0,0.6)";
     ctx.fill();
 
     // draw all rocks
     for (var i = 0; i < balls.length; i++) {
         var ball = balls[i];
         // optionally, drawImage(rocksImg,rock.x,rock.y)
-        ctx.fillStyle = "gray";
+        ctx.fillStyle = "rgba(0,255,0)";
         ctx.fillRect(ball.x, ball.y, ball.width, ball.height);
     }
     // draw the score
     /*ctx.font = "14px Times New Roman";
     ctx.fillStyle = "black";
     ctx.fillText("Score: " + score, 10, 15);*/
+  }
 }
 
 // button to start the game
@@ -258,7 +225,6 @@ function drawAll() {
         animate();
     };
 });*/
-
 
 // Load the model.
 handTrack.load(modelParams).then(lmodel => {
