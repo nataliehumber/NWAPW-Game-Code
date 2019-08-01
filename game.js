@@ -10,7 +10,7 @@ var moveCanvas = document.getElementById("movecanvas");
 moveCanvas.style.position = "fixed";
 var ctx = moveCanvas.getContext("2d");
 
-moveCanvas.width = (window.innerWidth) * 0.6;
+moveCanvas.width = (window.innerWidth) * 0.9;
 moveCanvas.height = window.innerHeight;
 
 var gamex;
