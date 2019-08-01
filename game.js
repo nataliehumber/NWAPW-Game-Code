@@ -82,10 +82,10 @@ var startingScore = 50;
 var continueAnimating = false;
 var score;
 
-var blockWidth = 150;
+var blockWidth = 125;
 var blockHeight = 35;
 var block = {
-    x: 0,
+    x: x,
     y: moveCanvas.height - blockHeight,
     width: blockWidth,
     height: blockHeight,
@@ -160,6 +160,18 @@ function drawAll() {
 
     // clear the canvas
     ctx.clearRect(0, 0, moveCanvas.width, moveCanvas.height);
+
+    let x = gamex;
+    let y= gamey;
+
+    var blockWidth = 125;
+    var blockHeight = 35;
+    var block = {
+        x: x,
+        y: moveCanvas.height - blockHeight,
+        width: blockWidth,
+        height: blockHeight,
+    }
 
     //ctx.beginPath();
     //ctx.rect(gamex, 750, 150, 40);
