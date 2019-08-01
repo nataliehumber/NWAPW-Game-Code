@@ -19,7 +19,7 @@ var x;
 var y;
 
 // game variables
-var startingScore = 30;
+var startingScore = 3;
 var continueAnimating = false;
 var score;
 score = startingScore;
@@ -161,7 +161,7 @@ function drawAll() {
         var ball = balls[i];
         // test for ball-block collision
         if (isColliding(ball, block)) {
-            score -= 10;
+            score -= 1;
             resetball(ball);
         }
         // advance the balls
@@ -175,12 +175,12 @@ function drawAll() {
     // draw the score
     ctx.font = "20px Arial";
     ctx.fillStyle = "black";
-    ctx.fillText("SCORE: " + score, 60, 45);
+    ctx.fillText("HITS REMAINING: " + score, 80, 55);
     if(score == 0) {
       continueAnimating = false;
-      ctx.font = "20px Arial";
+      ctx.font = "48px Arial";
       ctx.fillStyle = "black";
-      ctx.fillText("GAME OVER", moveCanvas.width / 1.75, 45);
+      ctx.fillText("                              GAME OVER", 80, 55);
     }
 }
 
@@ -190,7 +190,7 @@ handTrack.load(modelParams).then(lmodel => {
     model = lmodel
     updateNote.innerText = "Loaded Model!"
     if (updateNote = "Loaded Model") {
-      alert("This is a hand controlled game! \nThe red block follows the user's hand movement in real time and will pause if hand can not be identifed \nDodge the falling cubes and you win...miss 3 and it's game over!");
+      alert("This is a hand controlled game! \nThe red block follows the user's hand movement in real time and will pause if hand can not be identifed or is out of frame \nDodge the falling cubes and see how long you can last...get hit by three and it's game over!");
 
       toggleVideo();
     };
