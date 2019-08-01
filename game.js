@@ -10,7 +10,7 @@ var moveCanvas = document.getElementById("movecanvas");
 moveCanvas.style.position = "fixed";
 var ctx = moveCanvas.getContext("2d");
 
-moveCanvas.width = window.innerWidth;
+moveCanvas.width = (window.innerWidth) * 0.6;
 moveCanvas.height = window.innerHeight;
 
 var gamex;
@@ -180,7 +180,7 @@ function drawAll() {
       continueAnimating = false;
       ctx.font = "48px Arial";
       ctx.fillStyle = "black";
-      ctx.fillText("                              GAME OVER", 80, 55);
+      ctx.fillText("                    GAME OVER", 80, 70);
     }
 }
 
@@ -190,7 +190,7 @@ handTrack.load(modelParams).then(lmodel => {
     model = lmodel
     updateNote.innerText = "Loaded Model!"
     if (updateNote = "Loaded Model") {
-      alert("This is a hand controlled game! \nThe red block follows the user's hand movement in real time and will pause if hand can not be identifed or is out of frame \nDodge the falling cubes and see how long you can last...get hit by three and it's game over!");
+      alert("This is a hand controlled game! \nThe red block follows the user's hand movement in real time and will pause if hand can not be identifed or is out of frame \n\nDodge the falling cubes and see how long you can last...get hit by three and it's game over!\n\nTo restart the game, refresh the page.");
 
       toggleVideo();
     };

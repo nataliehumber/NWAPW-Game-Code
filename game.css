@@ -4,11 +4,8 @@
   z-index: -1;
   position: fixed;
   left: 300px;
-  top: 80px;
   background: #ffffff;
   border-radius: 3px;
-  width: 1120px;
-  height: 690px;
 }
 body {
     padding: 20px;
