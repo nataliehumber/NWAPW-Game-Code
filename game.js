@@ -78,51 +78,18 @@ function runDetection() {
   });
 }
 
-function scrolling() {
-  if (gamey > 500){
-    stopScroll();
-    startScrollDown();
-  }
-  else if (gamey < 80){
-    stopScroll();
-    startScrollUp();
-  }
-  else if (80 <= gamey <= 500){
-    stopScroll();
-  };
-}
-
-function startScrollDown() {
-   scroll = setInterval(function(){ window.scrollBy(0, 10); console.log('start');}, 0.01);
-
-}
-function stopScroll() {
-   clearInterval(scroll);
-}
-
-function startScrollUp() {
-  scroll = setInterval(function(){ window.scrollBy(0, -10); console.log('start');}, 0.01);
-}
-
-/* function findPos() {
-  let elem = document.getElementById("mybutton");
-  let elemWidth = elem.offsetWidth;
-  let elemHeight = elem.offsetHeight;
-
-  if (elem.offsetParent) {
-    do {
-        curleft += elem.offsetLeft;
-        curtop += elem.offsetTop;
-        curright = window.innerWidth - (elem.offsetLeft + elemWidth);
-        curbott = window.innerHeight - (elem.offsetTop + elemHeight);
-    } while (elem = elem.offsetParent);
-    console.log('Left: ' + curleft, 'Top: ' + curtop, 'Right: ' + curright, 'Bottom: ' + curbott);
-  }
-}*/
-
 var startingScore = 50;
 var continueAnimating = false;
 var score;
+
+var blockWidth = 150;
+var blockHeight = 35;
+var block = {
+    x: 0,
+    y: moveCanvas.height - blockHeight,
+    width: blockWidth,
+    height: blockHeight,
+}
 
 var ballWidth = 15;
 var ballHeight = 15;
@@ -153,27 +120,22 @@ function animate() {
 
     if (continueAnimating) {
         requestAnimationFrame(animate);
-        for (var i = 0; i < balls.length; i++) {
-            resetBall(balls[i]);
     }
-  }
 
     // for each rock
     // (1) check for collisions
     // (2) advance the rock
     // (3) if the rock falls below the canvas, reset that rock
 
-
     for (var i = 0; i < balls.length; i++) {
-      console.log('enteringloop');
 
         var ball = balls[i];
 
         // test for rock-block collision
-        /*if (isColliding(rock, block)) {
+        if (isColliding(ball, block)) {
             score -= 10;
-            resetRock(rock);
-        }*/
+            resetBall(ball);
+        }
 
         // advance the rocks
         ball.y += ball.speed;
@@ -182,9 +144,16 @@ function animate() {
         if (ball.y > moveCanvas.height) {
             resetBall(ball);
         }
-    // redraw everything
-    drawAll();
+      }
 
+// redraw everything
+drawAll();
+
+}
+
+function isColliding(a, b) {
+    return !(
+    b.x > a.x + a.width || b.x + b.width < a.x || b.y > a.y + a.height || b.y + b.height < a.y);
 }
 
 function drawAll() {
@@ -192,12 +161,11 @@ function drawAll() {
     // clear the canvas
     ctx.clearRect(0, 0, moveCanvas.width, moveCanvas.height);
 
-    let x = gamex;
-    let y = gamey;
+    //ctx.beginPath();
+    //ctx.rect(gamex, 750, 150, 40);
     ctx.beginPath();
-    ctx.rect(x, 750, 150, 40);
-    ctx.fillStyle = "rgba(255,0,0,0.6)";
-    ctx.fill();
+    ctx.fillStyle = "rgba(243,201,201,1)";
+    ctx.fillRect(block.x, block.y, block.width, block.height);
 
     // draw all rocks
     for (var i = 0; i < balls.length; i++) {
@@ -211,7 +179,6 @@ function drawAll() {
     ctx.fillStyle = "black";
     ctx.fillText("Score: " + score, 10, 15);*/
   }
-}
 
 // button to start the game
 /*$("#start").click(function () {
@@ -233,6 +200,5 @@ handTrack.load(modelParams).then(lmodel => {
     updateNote.innerText = "Loaded Model!"
     if (updateNote = "Loaded Model") {
       toggleVideo();
-      findPos();
     };
 });
