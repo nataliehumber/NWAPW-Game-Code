@@ -23,6 +23,33 @@ var gamey;
 var x;
 var y;
 
+// game variables
+var startingScore = 30;
+var continueAnimating = false;
+var score;
+score = startingScore;
+
+// block variables
+var blockWidth = 0;
+var blockHeight = 0;
+var blockSpeed = 0;
+var block = {
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+    blockSpeed: 0
+}
+
+// ball variables
+var ballWidth = 15;
+var ballHeight = 15;
+var totalballs = 15;
+var balls = [];
+for (var i = 0; i < totalballs; i++) {
+    addball();
+}
+
 const modelParams = {
     flipHorizontal: true,   // flip e.g for video
     maxNumBoxes: 1,        // maximum number of boxes to detect
@@ -35,8 +62,9 @@ function startVideo() {
         console.log("video started", status);
         if (status) {
             updateNote.innerText = "Video started. Now tracking"
-            isVideo = true
-            runDetection()
+            isVideo = true;
+            continueAnimating = true;
+            runDetection();
         } else {
             updateNote.innerText = "Please enable video"
         }
@@ -68,40 +96,16 @@ function runDetection() {
       gamey = moveCanvas.height * (midvalY / video.height)
       console.log(midvalY);
       console.log('Predictions: ', gamey);
-      drawAll();
+
+      if(continueAnimating == true){
+        drawAll();
+      }
       }
 
     if (isVideo) {
       requestAnimationFrame(runDetection);
     }
   });
-}
-
-// game variables
-var startingScore = 50;
-var continueAnimating = false;
-var score;
-score = startingScore;
-
-// block variables
-var blockWidth = 0;
-var blockHeight = 0;
-var blockSpeed = 0;
-var block = {
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0,
-    blockSpeed: 0
-}
-
-// ball variables
-var ballWidth = 15;
-var ballHeight = 15;
-var totalballs = 10;
-var balls = [];
-for (var i = 0; i < totalballs; i++) {
-    addball();
 }
 
 function addball() {
@@ -150,7 +154,7 @@ function drawAll() {
 
     // draw the background
     // (optionally drawImage an image)
-    ctx.fillStyle = "ivory";
+    ctx.fillStyle = "white";
     ctx.fillRect(0, 0, moveCanvas.width, moveCanvas.height);
 
     let x = gamex;
@@ -195,14 +199,20 @@ function drawAll() {
     for (var i = 0; i < balls.length; i++) {
         var ball = balls[i];
         // optionally, drawImage(ballsImg,ball.x,ball.y)
-        ctx.fillStyle = "gray";
+        ctx.fillStyle = "rgba(0,255,0)";
         ctx.fillRect(ball.x, ball.y, ball.width, ball.height);
     }
 
     // draw the score
-    ctx.font = "14px Times New Roman";
+    ctx.font = "20px Times New Roman";
     ctx.fillStyle = "black";
     ctx.fillText("Score: " + score, 10, 15);
+    if(score == 0) {
+      continueAnimating = false;
+      ctx.font = "20px Times New Roman";
+      ctx.fillStyle = "black";
+      ctx.fillText("               GAME OVER", 10, 15);
+    }
 }
 
 // Load the model.
