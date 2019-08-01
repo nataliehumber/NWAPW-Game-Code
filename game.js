@@ -68,8 +68,7 @@ function runDetection() {
       gamey = moveCanvas.height * (midvalY / video.height)
       console.log(midvalY);
       console.log('Predictions: ', gamey);
-      animate();
-
+      drawAll();
       }
 
     if (isVideo) {
@@ -78,77 +77,65 @@ function runDetection() {
   });
 }
 
+// game variables
 var startingScore = 50;
 var continueAnimating = false;
 var score;
+score = startingScore;
 
-var blockWidth = 125;
-var blockHeight = 35;
+// block variables
+var blockWidth = 0;
+var blockHeight = 0;
+var blockSpeed = 0;
 var block = {
-    x: x,
-    y: moveCanvas.height - blockHeight,
-    width: blockWidth,
-    height: blockHeight,
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+    blockSpeed: 0
 }
 
+// ball variables
 var ballWidth = 15;
 var ballHeight = 15;
-var totalBalls = 10;
+var totalballs = 10;
 var balls = [];
-for (var i = 0; i < totalBalls; i++) {
-    addBall();
+for (var i = 0; i < totalballs; i++) {
+    addball();
 }
 
-function addBall() {
+function addball() {
     var ball = {
         width: ballWidth,
         height: ballHeight
     }
-    resetBall(ball);
+    resetball(ball);
     balls.push(ball);
 }
 
-function resetBall(ball) {
+// move the ball to a random position near the top-of-moveCanvas
+// assign the ball a random speed
+function resetball(ball) {
     ball.x = Math.random() * (moveCanvas.width - ballWidth);
     ball.y = 15 + Math.random() * 30;
-    ball.speed = 0.2 + Math.random() * 10;
+    ball.speed = 0.2 + Math.random() * 18;
 }
 
-function animate() {
 
-    // request another animation frame
-
-    if (continueAnimating) {
-        requestAnimationFrame(animate);
+//left and right keypush event handlers
+document.onkeydown = function (event) {
+    if (event.keyCode == 39) {
+        block.x += block.blockSpeed;
+        /*if (block.x >= moveCanvas.width - block.width) {
+            continueAnimating = false;
+            alert("Completed with a score of " + score);
+        }*/
+    } else if (event.keyCode == 37) {
+        block.x -= block.blockSpeed;
+        if (block.x <= 0) {
+            block.x = 0;
+        }
     }
-
-    // for each rock
-    // (1) check for collisions
-    // (2) advance the rock
-    // (3) if the rock falls below the canvas, reset that rock
-
-    for (var i = 0; i < balls.length; i++) {
-
-        var ball = balls[i];
-
-        // test for rock-block collision
-        if (isColliding(ball, block)) {
-            score -= 10;
-            resetBall(ball);
-        }
-
-        // advance the rocks
-        ball.y += ball.speed;
-
-        // if the rock is below the canvas,
-        if (ball.y > moveCanvas.height) {
-            resetBall(ball);
-        }
-      }
-
-// redraw everything
-drawAll();
-
 }
 
 function isColliding(a, b) {
@@ -158,14 +145,19 @@ function isColliding(a, b) {
 
 function drawAll() {
 
-    // clear the canvas
+    // clear the moveCanvas
     ctx.clearRect(0, 0, moveCanvas.width, moveCanvas.height);
 
-    let x = gamex;
-    let y= gamey;
+    // draw the background
+    // (optionally drawImage an image)
+    ctx.fillStyle = "ivory";
+    ctx.fillRect(0, 0, moveCanvas.width, moveCanvas.height);
 
-    var blockWidth = 125;
-    var blockHeight = 35;
+    let x = gamex;
+    let y = gamey;
+
+    var blockWidth = 30;
+    var blockHeight = 15;
     var block = {
         x: x,
         y: moveCanvas.height - blockHeight,
@@ -179,31 +171,39 @@ function drawAll() {
     ctx.fillStyle = "rgba(243,201,201,1)";
     ctx.fillRect(block.x, block.y, block.width, block.height);
 
-    // draw all rocks
+    for (var i = 0; i < balls.length; i++) {
+
+        var ball = balls[i];
+
+        // test for ball-block collision
+        if (isColliding(ball, block)) {
+            score -= 10;
+            resetball(ball);
+        }
+
+        // advance the balls
+        ball.y += ball.speed;
+
+        // if the ball is below the moveCanvas,
+        if (ball.y > moveCanvas.height) {
+            resetball(ball);
+        }
+
+    }
+
+    // draw all balls
     for (var i = 0; i < balls.length; i++) {
         var ball = balls[i];
-        // optionally, drawImage(rocksImg,rock.x,rock.y)
-        ctx.fillStyle = "rgba(0,255,0)";
+        // optionally, drawImage(ballsImg,ball.x,ball.y)
+        ctx.fillStyle = "gray";
         ctx.fillRect(ball.x, ball.y, ball.width, ball.height);
     }
-    // draw the score
-    /*ctx.font = "14px Times New Roman";
-    ctx.fillStyle = "black";
-    ctx.fillText("Score: " + score, 10, 15);*/
-  }
 
-// button to start the game
-/*$("#start").click(function () {
-    score = startingScore
-    block.x = 0;
-    for (var i = 0; i < rocks.length; i++) {
-        resetRock(rocks[i]);
-    }
-    if (!continueAnimating) {
-        continueAnimating = true;
-        animate();
-    };
-});*/
+    // draw the score
+    ctx.font = "14px Times New Roman";
+    ctx.fillStyle = "black";
+    ctx.fillText("Score: " + score, 10, 15);
+}
 
 // Load the model.
 handTrack.load(modelParams).then(lmodel => {
