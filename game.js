@@ -13,11 +13,6 @@ var ctx = moveCanvas.getContext("2d");
 moveCanvas.width = window.innerWidth;
 moveCanvas.height = window.innerHeight;
 
-var curleft = 0;
-var curtop = 0;
-var curright;
-var curbott;
-
 var gamex;
 var gamey;
 var x;
@@ -32,13 +27,11 @@ score = startingScore;
 // block variables
 var blockWidth = 0;
 var blockHeight = 0;
-var blockSpeed = 0;
 var block = {
     x: 0,
     y: 0,
     width: 0,
     height: 0,
-    blockSpeed: 0
 }
 
 // ball variables
@@ -122,96 +115,72 @@ function addball() {
 function resetball(ball) {
     ball.x = Math.random() * (moveCanvas.width - ballWidth);
     ball.y = 15 + Math.random() * 30;
-    ball.speed = 0.2 + Math.random() * 18;
+    ball.speed = 3 + Math.random() * 35;
 }
 
 
-//left and right keypush event handlers
-document.onkeydown = function (event) {
-    if (event.keyCode == 39) {
-        block.x += block.blockSpeed;
-        /*if (block.x >= moveCanvas.width - block.width) {
-            continueAnimating = false;
-            alert("Completed with a score of " + score);
-        }*/
-    } else if (event.keyCode == 37) {
-        block.x -= block.blockSpeed;
-        if (block.x <= 0) {
-            block.x = 0;
-        }
-    }
-}
-
+// a = ball, b = block, check for collisons
 function isColliding(a, b) {
     return !(
     b.x > a.x + a.width || b.x + b.width < a.x || b.y > a.y + a.height || b.y + b.height < a.y);
 }
 
 function drawAll() {
-
     // clear the moveCanvas
     ctx.clearRect(0, 0, moveCanvas.width, moveCanvas.height);
 
     // draw the background
-    // (optionally drawImage an image)
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, moveCanvas.width, moveCanvas.height);
 
+    //draw block attached to hand movement
     let x = gamex;
     let y = gamey;
-
-    var blockWidth = 30;
-    var blockHeight = 15;
+    var blockWidth = 130;
+    var blockHeight = 35;
     var block = {
         x: x,
         y: moveCanvas.height - blockHeight,
         width: blockWidth,
         height: blockHeight,
     }
-
-    //ctx.beginPath();
-    //ctx.rect(gamex, 750, 150, 40);
     ctx.beginPath();
     ctx.fillStyle = "rgba(243,201,201,1)";
     ctx.fillRect(block.x, block.y, block.width, block.height);
-
-    for (var i = 0; i < balls.length; i++) {
-
-        var ball = balls[i];
-
-        // test for ball-block collision
-        if (isColliding(ball, block)) {
-            score -= 10;
-            resetball(ball);
-        }
-
-        // advance the balls
-        ball.y += ball.speed;
-
-        // if the ball is below the moveCanvas,
-        if (ball.y > moveCanvas.height) {
-            resetball(ball);
-        }
-
-    }
 
     // draw all balls
     for (var i = 0; i < balls.length; i++) {
         var ball = balls[i];
         // optionally, drawImage(ballsImg,ball.x,ball.y)
-        ctx.fillStyle = "rgba(0,255,0)";
+        ctx.fillStyle = "rgba(92, 107, 192)";
         ctx.fillRect(ball.x, ball.y, ball.width, ball.height);
     }
 
+    //general game loop (has to be in this function due to the scope of gamex)
+    for (var i = 0; i < balls.length; i++) {
+        var ball = balls[i];
+        // test for ball-block collision
+        if (isColliding(ball, block)) {
+            score -= 10;
+            resetball(ball);
+        }
+        // advance the balls
+        ball.y += ball.speed;
+        // if the ball is below the moveCanvas,
+        if (ball.y > moveCanvas.height) {
+            resetball(ball);
+        }
+    }
+
     // draw the score
-    ctx.font = "20px Times New Roman";
+    ctx.font = "20px Arial";
     ctx.fillStyle = "black";
-    ctx.fillText("Score: " + score, 10, 15);
+    ctx.fillText("SCORE: " + score, 60, 45);
     if(score == 0) {
       continueAnimating = false;
-      ctx.font = "20px Times New Roman";
+      ctx.font = "20px Arial";
       ctx.fillStyle = "black";
-      ctx.fillText("               GAME OVER", 10, 15);
+      ctx.fillText("GAME OVER", moveCanvas.width / 1.75, 45);
     }
 }
 
@@ -221,6 +190,8 @@ handTrack.load(modelParams).then(lmodel => {
     model = lmodel
     updateNote.innerText = "Loaded Model!"
     if (updateNote = "Loaded Model") {
+      alert("This is a hand controlled game! \nThe red block follows the user's hand movement in real time and will pause if hand can not be identifed \nDodge the falling cubes and you win...miss 3 and it's game over!");
+
       toggleVideo();
     };
 });
